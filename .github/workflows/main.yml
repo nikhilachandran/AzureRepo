@@ -53,14 +53,15 @@ jobs:
      - name: Test
        run: dotnet test ./WebJobConsoleApp/ --no-restore --verbosity normal --output ${{env.BINARIES}}
        
-     - name: Zip
-       if: github.event_name != 'pull_request' # skip on PRs
-       uses: nguyenquyhy/zip-release@v0.3.0
+     - uses: actions/checkout@master
+     - name: Archive Release
+       uses: thedoctor0/zip-release@master
        with:
+        type: 'zip'
         filename: '${{env.ZIP_FILE}}'
         workingDirectory:  ${{env.ZIP_PATH}}
-        #exclusions: 'WebJobConsoleApp.exe app_data/**/unix/*' # skip .exe and Unix runtime as deployment will be to a Windows App Service
-        
+        exclusions: '*.git* /*node_modules/* .editorconfig'
+  
      - name: Deploy to Test (develop branch) # skip on PRs
        if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request' # skip on PRs, deploy develop branch to the test environment
        uses: srijken/azure-zip-deploy@v1.0.1
