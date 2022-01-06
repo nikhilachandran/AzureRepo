@@ -3,10 +3,10 @@
 name: CI
 
 env:
-  BINARIES: './output/app_data/jobs/continuous/mywebjob' # the last folder name will become the webjob name in the portal
-  ZIP_FILE: 'webjob.zip'
+  BINARIES: './output/app_data/jobs/continuous/WebJobForAppManual' # the last folder name will become the webjob name in the portal
+  ZIP_FILE: 'WebJobConsoleApp.zip'
   ZIP_PATH: './output'
-  ZIP_FILEPATH: './output/webjob.zip'
+  ZIP_FILEPATH: './output/WebJobConsoleApp.zip'
   NUGET_VERSION: '4.6.1'
   
 # Controls when the workflow will run
@@ -49,3 +49,21 @@ jobs:
 
      - name: Build
        run: dotnet build ./WebJobConsoleApp/ --configuration Release --no-restore 
+       
+     - name: Test
+       run: dotnet test ./WebJobConsoleApp/ --no-restore --verbosity normal --output ${{env.BINARIES}}
+       
+     - name: Zip
+       if: github.event_name != 'pull_request' # skip on PRs
+       uses: nguyenquyhy/zip-release@v0.3.0
+       with:
+        filename: '${{env.ZIP_FILE}}'
+        workingDirectory:  ${{env.ZIP_PATH}}
+        exclusions: 'WebJobConsoleApp.exe app_data/**/unix/*' # skip .exe and Unix runtime as deployment will be to a Windows App Service
+        
+     - name: Deploy to Test (develop branch) # skip on PRs
+       if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request' # skip on PRs, deploy develop branch to the test environment
+       uses: srijken/azure-zip-deploy@v1.0.1
+       with:
+         zip-file: ${{env.ZIP_FILEPATH}}
+         publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST }}
