@@ -59,10 +59,11 @@ jobs:
        with:
         type: 'zip'
         filename: '${{env.ZIP_FILE}}'
-        workingDirectory:  ${{env.ZIP_PATH}}
+        path: '${{env.ZIP_PATH}}'
+        directory: '${{env.ZIP_FILEPATH}}'
         exclusions: '*.git* /*node_modules/* .editorconfig'
   
-     - name: Deploy to Test (develop branch) # skip on PRs
+     - name: Deploy to AzureWebApp # skip on PRs
        if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request' # skip on PRs, deploy develop branch to the test environment
        uses: srijken/azure-zip-deploy@v1.0.1
        with:
