@@ -30,7 +30,7 @@ jobs:
         dotnet-version: 3.1.101
 
      - name: Install dependencies
-       run: dotnet restore ./WebJobConsoleApp/WebJobConsoleAp.sln
+       run: dotnet restore ./WebJobConsoleApp/
 
      - name: Build
        run: dotnet build ./WebJobConsoleAp/WebJobConsoleAp.sln --configuration Release --no-restore 
