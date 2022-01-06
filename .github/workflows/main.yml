@@ -33,4 +33,4 @@ jobs:
        run: dotnet restore ./WebJobConsoleApp/
 
      - name: Build
-       run: dotnet build ./WebJobConsoleApp/ --configuration Release --no-restore 
+       run: dotnet build ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj --configuration Release --no-restore 
