@@ -2,6 +2,13 @@
 
 name: CI
 
+env:
+  BINARIES: './output/app_data/jobs/continuous/mywebjob' # the last folder name will become the webjob name in the portal
+  ZIP_FILE: 'webjob.zip'
+  ZIP_PATH: './output'
+  ZIP_FILEPATH: './output/webjob.zip'
+  NUGET_VERSION: '4.6.1'
+  
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
@@ -27,10 +34,18 @@ jobs:
      - name: Setup .NET Core
        uses: actions/setup-dotnet@v1
        with:
-        dotnet-version: 3.1.101
+        dotnet-version: 5.0.x
 
      - name: Install dependencies
        run: dotnet restore ./WebJobConsoleApp/
+       
+     - name: Install Nuget
+       uses: nuget/setup-nuget@v1
+       with:
+        nuget-version: ${{ env.NUGET_VERSION}}
+        
+     - name: NuGet to restore dependencies as well as project-specific tools that are specified in the project file
+       run: nuget restore ./WebJobConsoleApp/
 
      - name: Build
-       run: dotnet build ./WebJobConsoleApp/WebJobConsoleApp.sln --configuration Release --no-restore 
+       run: dotnet build ./WebJobConsoleApp/ --configuration Release --no-restore 
