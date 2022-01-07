@@ -50,22 +50,33 @@ jobs:
      - name: Build
        run: dotnet build ./WebJobConsoleApp/ --configuration Release --no-restore 
        
-     - name: Test
-       run: dotnet test ./WebJobConsoleApp/ --no-restore --verbosity normal --output ${{env.BINARIES}}
-       
-     - uses: actions/checkout@master
-     - name: Archive Release
-       uses: thedoctor0/zip-release@master
+     - name: dotnet publish
+       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+     - name: Upload artifact for deployment job
+       uses: actions/upload-artifact@v2
        with:
-        type: 'zip'
-        filename: '${{env.ZIP_FILE}}'
-        path: '${{env.ZIP_PATH}}'
-        directory: '${{env.ZIP_FILEPATH}}'
-        exclusions: '*.git* /*node_modules/* .editorconfig'
-  
-     - name: Deploy to AzureWebApp # skip on PRs
-       if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request' # skip on PRs, deploy develop branch to the test environment
-       uses: srijken/azure-zip-deploy@v1.0.1
-       with:
-         zip-file: ${{env.ZIP_FILEPATH}}
-         publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST }}
+        name: .net-app
+        path: ${{env.DOTNET_ROOT}}/myapp
+         
+  deploy:
+          runs-on: windows-latest
+          needs: build
+          environment:
+            name: '***'
+            url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+          steps:
+          - name: Download artifact from build job
+            uses: actions/download-artifact@v2
+            with:
+              name: .net-app
+
+          - name: Deploy to Azure Web App
+            id: deploy-to-webapp
+            uses: azure/webapps-deploy@v2
+            with:
+              app-name: '***'
+              slot-name: '***'
+              publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST}}
+              package: .
