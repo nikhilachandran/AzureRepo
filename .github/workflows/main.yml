@@ -49,14 +49,18 @@ jobs:
      - name: NuGet to restore dependencies as well as project-specific tools that are specified in the project file
        run: nuget restore ./WebJobConsoleApp/
 
-     #- name: Build
-       #run: dotnet build ./WebJobConsoleApp/ --configuration Release --no-restore 
-     
-     - name: Setup MSBuild path
-       uses: microsoft/setup-msbuild@v1.0.2
+     - name: Build
+       run: dotnet build ./WebJobConsoleApp/ --configuration Release
        
-     - name: Build Solution
-       run: msbuild ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj /nologo /verbosity:m /t:Build /p:_PackageTempDir="\published\"
+     - name: dotnet publish
+       run: |
+        dotnet publish -c Release -o myapp
+     
+     #- name: Setup MSBuild path
+      # uses: microsoft/setup-msbuild@v1.0.2
+       
+     #- name: Build Solution
+      # run: msbuild ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj /nologo /verbosity:m /t:Build /p:_PackageTempDir="\published\"
          
   deploy:
           runs-on: windows-latest
@@ -68,13 +72,7 @@ jobs:
             with:
               app-name: ${{ env.AZURE_WEBAPP_NAME }}
               publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST }}
-              package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          
-          - name: Upload Artifact
-            uses : actions/upload-artifact@v1.0.0
-            with : 
-              name: ${{ env.AZURE_WEBAPP_NAME }}
-              path: \published\
-               
+              package: '/.myapp/'
+
             
              
