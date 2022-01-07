@@ -64,16 +64,17 @@ jobs:
           
           steps:
           - name: Azure Deploy
-          uses: azure/webapps-deploy@v1
-          with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    
-           - name : Upload 
-              uses: actions/upload-artifact@v1.0.0
-                 with:
-                  name: webapp
-                  path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+            uses: azure/webapps-deploy@v1
+            with:
+              app-name: ${{ env.AZURE_WEBAPP_NAME }}
+              publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST }}
+              package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          
+          - name: Upload Artifact
+            uses : actions/upload-artifact@v1.0.0
+            with : 
+              name: ${{ env.AZURE_WEBAPP_NAME }}
+              path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+               
             
              
