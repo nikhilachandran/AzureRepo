@@ -56,7 +56,7 @@ jobs:
        uses: microsoft/setup-msbuild@v1.0.2
        
      - name: Build Solution
-       run: msbuild.exe ./WebJobConsoleApp/WebJobConsoleApp.sln /p:Configuration=Release /p:DeployOnBuild=true /t:WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=${{ env.AZURE_WEBAPP_PACKAGE_PATH }} /p:PackageAsSingleFile=true     
+       run: msbuild.exe ./WebJobConsoleApp/WebJobConsoleApp.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl=${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
          
   deploy:
           runs-on: windows-latest
