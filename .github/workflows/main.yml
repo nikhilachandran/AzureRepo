@@ -54,7 +54,7 @@ jobs:
        
      - name: dotnet publish
        run: |
-        dotnet publish ./WebJobConsoleApp/ -c Release -o myapp
+        dotnet publish ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj -c Release -o myapp
      
      #- name: Setup MSBuild path
       # uses: microsoft/setup-msbuild@v1.0.2
