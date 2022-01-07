@@ -50,27 +50,14 @@ jobs:
      - name: Build
        run: dotnet build ./WebJobConsoleApp/ --configuration Release --no-restore 
        
-     - name: dotnet publish
-       run: dotnet publish ./WebJobConsoleApp/ -c Release -o ${{env.DOTNET_ROOT}}/myapp
-
-     - name: Upload artifact for deployment job
-       uses: actions/upload-artifact@v2
-       with:
-        name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
+     - name: Publish to folder
+       run: msbuild ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj ...
          
   deploy:
           runs-on: windows-latest
           needs: build
-          environment:
-            name: '***'
-            url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+          
           steps:
-          - name: Download artifact from build job
-            uses: actions/download-artifact@v2
-            with:
-              name: .net-app
 
           - name: Deploy to Azure Web App
             id: deploy-to-webapp
