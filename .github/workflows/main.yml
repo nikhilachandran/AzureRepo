@@ -51,11 +51,11 @@ jobs:
        run: nuget restore ./WebJobConsoleApp/
 
      - name: Build
-       run: dotnet build ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj --configuration Release
+       run: dotnet build --configuration Release
        
      - name: dotnet publish
        run: |
-        dotnet publish ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
      
      - name: Upload artifact for deployment job
        uses: actions/upload-artifact@v2
