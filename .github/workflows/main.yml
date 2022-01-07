@@ -56,7 +56,7 @@ jobs:
        uses: microsoft/setup-msbuild@v1.0.2
        
      - name: Build Solution
-       run: msbuild ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
+       run: msbuild ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj /nologo /verbosity:m /t:Build /p:_PackageTempDir="\published\"
          
   deploy:
           runs-on: windows-latest
