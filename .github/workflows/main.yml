@@ -47,14 +47,20 @@ jobs:
      - name: NuGet to restore dependencies as well as project-specific tools that are specified in the project file
        run: nuget restore ./WebJobConsoleApp/
 
-     - name: Build
-       run: dotnet build ./WebJobConsoleApp/ --configuration Release --no-restore 
+     #- name: Build
+       #run: dotnet build ./WebJobConsoleApp/ --configuration Release --no-restore 
      
      - name: Setup MSBuild path
        uses: microsoft/setup-msbuild@v1.0.2
        
-     - name: Publish to folder
-       run: msbuild ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj ...
+     - name: Build Solution
+       run: msbuild.exe ./WebJobConsoleApp/WebJobConsoleApp.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
+   
+     - name: Upload artifact
+       uses: actions/upload-artifact@v1.0.0
+       with:
+        name: WebJobConsoleApp
+        path: "./_build"        
          
   deploy:
           runs-on: windows-latest
