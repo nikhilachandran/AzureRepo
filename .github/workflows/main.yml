@@ -8,6 +8,8 @@ env:
   ZIP_PATH: './output'
   ZIP_FILEPATH: './output/WebJobConsoleApp.zip'
   NUGET_VERSION: '4.6.1'
+  AZURE_WEBAPP_PACKAGE_PATH: 'published'
+  AZURE_WEBAPP_NAME: 'WebAppForWebJobConsoleApp'
   
 # Controls when the workflow will run
 on:
@@ -54,13 +56,7 @@ jobs:
        uses: microsoft/setup-msbuild@v1.0.2
        
      - name: Build Solution
-       run: msbuild.exe ./WebJobConsoleApp/WebJobConsoleApp.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-   
-     - name: Upload artifact
-       uses: actions/upload-artifact@v1.0.0
-       with:
-        name: WebJobConsoleApp
-        path: "./WebJobConsoleApp/WebJobConsoleApp/bin/Release/"        
+       run: msbuild.exe ./WebJobConsoleApp/WebJobConsoleApp.sln /p:Configuration=Release /p:DeployOnBuild=true /t:WebPublish /p:WebPublishMethod=FileSystem /p:publishUrl=${{ env.AZURE_WEBAPP_PACKAGE_PATH }} /p:PackageAsSingleFile=true     
          
   deploy:
           runs-on: windows-latest
@@ -68,8 +64,16 @@ jobs:
           
           steps:
           - name: Azure Deploy
-            uses: srijken/azure-zip-deploy@v1.0.1
-            with:  
-             zip-file: 'WebJobConsoleApp'
-             publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST}}
+          uses: azure/webapps-deploy@v1
+          with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    
+           - name : Upload 
+              uses: actions/upload-artifact@v1.0.0
+                 with:
+                  name: webapp
+                  path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+            
              
