@@ -67,11 +67,9 @@ jobs:
           needs: build
           
           steps:
-
-          - name: Deploy to Azure Web App
-            id: deploy-to-webapp
-            uses: azure/webapps-deploy@v2
-            with:
-              app-name: 'WebAppForWebJobConsoleApp'
-              publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST}}
-              package: "./WebJobConsoleApp/WebJobConsoleApp/bin/Release/"   
+          - name: Azure Deploy
+            uses: srijken/azure-zip-deploy@v1.0.1
+             with:
+            zip-file: 'WebJobConsoleApp'
+            publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST}}
+             
