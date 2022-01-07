@@ -72,7 +72,6 @@ jobs:
             id: deploy-to-webapp
             uses: azure/webapps-deploy@v2
             with:
-              app-name: '***'
-              slot-name: '***'
+              app-name: 'WebAppForWebJobConsoleApp'
               publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST}}
-              package: .
+              package: "./WebJobConsoleApp/WebJobConsoleApp/bin/Release/"   
