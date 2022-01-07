@@ -60,7 +60,7 @@ jobs:
        uses: actions/upload-artifact@v1.0.0
        with:
         name: WebJobConsoleApp
-        path: "../_build"        
+        path: "./WebJobConsoleApp/WebJobConsoleApp/bin/Release/"        
          
   deploy:
           runs-on: windows-latest
