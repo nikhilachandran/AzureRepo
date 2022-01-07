@@ -36,9 +36,8 @@ jobs:
      - name: Setup .NET Core
        uses: actions/setup-dotnet@v1
        with:
-        dotnet-version: '6.0.x'
-        include-prerelease: true
-
+        dotnet-version: 3.1.101
+        
      - name: Install dependencies
        run: dotnet restore ./WebJobConsoleApp/
        
@@ -51,23 +50,23 @@ jobs:
        run: nuget restore ./WebJobConsoleApp/
 
      - name: Build
-       run: dotnet build --configuration Release
+       run: dotnet build ./WebJobConsoleApp/ --configuration Release
        
-     - name: dotnet publish
-       run: |
-        dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
-     
+     #- name: dotnet publish
+      # run: |
+      #  dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+     - name: Setup MSBuild path
+       uses: microsoft/setup-msbuild@v1.0.2
+       
+     - name: Build Solution
+       run: msbuild.exe ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj /nologo /verbosity:m /t:Build /p:_PackageTempDir=${{env.DOTNET_ROOT}}
+       
      - name: Upload artifact for deployment job
        uses: actions/upload-artifact@v2
        with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
-          
-     #- name: Setup MSBuild path
-      # uses: microsoft/setup-msbuild@v1.0.2
-       
-     #- name: Build Solution
-      # run: msbuild ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj /nologo /verbosity:m /t:Build /p:_PackageTempDir="\published\"
+          path: ${{env.DOTNET_ROOT}}
          
   deploy:
           runs-on: windows-latest
