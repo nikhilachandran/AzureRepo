@@ -69,7 +69,7 @@ jobs:
           steps:
           - name: Azure Deploy
             uses: srijken/azure-zip-deploy@v1.0.1
-             with:
-            zip-file: 'WebJobConsoleApp'
-            publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST}}
+            with:  
+             zip-file: 'WebJobConsoleApp'
+             publish-profile: ${{ secrets.WEBJOB_PUBLISH_PROFILE_TEST}}
              
