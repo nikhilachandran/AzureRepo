@@ -60,13 +60,13 @@ jobs:
        uses: microsoft/setup-msbuild@v1.0.2
        
      - name: Build Solution
-       run: msbuild.exe ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj /nologo /verbosity:m /t:Build /p:_PackageTempDir="../../_build"
+       run: msbuild.exe ./WebJobConsoleApp/WebJobConsoleApp/WebJobConsoleApp.csproj /nologo /verbosity:m /t:Build /p:_PackageTempDir="../_build"
        
      - name: Upload artifact for deployment job
        uses: actions/upload-artifact@v2
        with:
           name: .net-app
-          path: "../../_build"
+          path: "../WebJobConsoleApp/WebJobConsoleApp/bin/Debug/"
          
   deploy:
           runs-on: windows-latest
