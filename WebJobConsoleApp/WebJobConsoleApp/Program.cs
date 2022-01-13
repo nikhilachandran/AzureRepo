@@ -23,7 +23,7 @@ namespace WebJobConsoleApp
                 //create contact sample record
                 Entity account = new Entity();
                 account.LogicalName = "account";
-                account["name"] = "CRM Azure SampleAccountCheck - " + DateTime.Now.ToString();
+                account["name"] = "CRM Azure SampleAccount Testing - " + DateTime.Now.ToString();
                 service.Create(account);
             }
             catch (Exception ex)
